@@ -41,7 +41,7 @@ class Book(models.Model):
             self.book_id = str(uuid.uuid4()).replace('_', '')[:24].lower()
             
             qrcode_img = qrcode.make(self.book_id)
-            canvas = Image.new('RGB', (qrcode_img.pixel_size, qrcode_img.pixel_size,), 'white')
+            canvas = Image.new('RGB', (qrcode_img.pixel_size, qrcode_img.pixel_size), 'white')
             canvas.paste(qrcode_img)
             fname = f'qr_code-{self.title}.png'
             buffer = BytesIO()
