@@ -72,6 +72,8 @@ class Book(models.Model):
         
         super().save(*args, **kwargs)
     
+    
+    # bug:
     # def save(self, *args, **kwargs):
     #     if not self.book_id:
     #         self.book_id = str(uuid.uuid4()).replace('_', '')[:24].lower()
