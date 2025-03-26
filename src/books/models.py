@@ -39,14 +39,50 @@ class Book(models.Model):
     def save(self, *args, **kwargs):
         if not self.book_id:
             self.book_id = str(uuid.uuid4()).replace('_', '')[:24].lower()
-            
-            qrcode_img = qrcode.make(self.book_id)
-            canvas = Image.new('RGB', (qrcode_img.pixel_size, qrcode_img.pixel_size), 'white')
-            canvas.paste(qrcode_img)
-            fname = f'qr_code-{self.title}.png'
-            buffer = BytesIO()
-            canvas.save(buffer, 'PNG')
-            sef.qr_code.save(fname, File(buffer), save=False)
-            canvas.close()
+    
+    # تولید QR کد
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+    )
+        qr.add_data(self.book_id)
+        qr.make(fit=True)
+
+        qrcode_img = qr.make_image(fill='black', back_color='white')
+
+        # تبدیل تصویر QRCode به فرمت مناسب PIL
+        qr_pil = qrcode_img.convert("RGB")  
+
+        # ایجاد یک canvas هم‌اندازه با تصویر QR
+        canvas = Image.new('RGB', qr_pil.size, 'white')
+        
+        # چسباندن تصویر QR در موقعیت (0,0)
+        canvas.paste(qr_pil, (0, 0))  
+
+        fname = f'qr_code-{self.title}.png'
+        buffer = BytesIO()
+        canvas.save(buffer, 'PNG')
+        
+        # اصلاح این خط (sef -> self)
+        self.qr_code.save(fname, File(buffer), save=False)
+
+        canvas.close()
         
         super().save(*args, **kwargs)
+    
+    # def save(self, *args, **kwargs):
+    #     if not self.book_id:
+    #         self.book_id = str(uuid.uuid4()).replace('_', '')[:24].lower()
+            
+    #     qrcode_img = qrcode.make(self.book_id)
+    #     canvas = Image.new('RGB', (qrcode_img.pixel_size, qrcode_img.pixel_size), 'white')
+    #     canvas.paste(qrcode_img)
+    #     fname = f'qr_code-{self.title}.png'
+    #     buffer = BytesIO()
+    #     canvas.save(buffer, 'PNG')
+    #     self.qr_code.save(fname, File(buffer), save=False)
+    #     canvas.close()
+        
+    #     super().save(*args, **kwargs)
