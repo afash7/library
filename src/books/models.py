@@ -47,7 +47,7 @@ class Book(models.Model):
             box_size=10,
             border=4,
     )
-        qr.add_data(self.book_id)
+        qr.add_data(self.isbn)
         qr.make(fit=True)
 
         qrcode_img = qr.make_image(fill='black', back_color='white')
@@ -61,7 +61,7 @@ class Book(models.Model):
         # چسباندن تصویر QR در موقعیت (0,0)
         canvas.paste(qr_pil, (0, 0))  
 
-        fname = f'qr_code-{self.title}.png'
+        fname = f'qr_code-{self.isbn}.png'
         buffer = BytesIO()
         canvas.save(buffer, 'PNG')
         
