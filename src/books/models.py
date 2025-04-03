@@ -16,6 +16,11 @@ class BookTitle(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     
+    
+    def get_books(self):
+        return self.books.all()
+    
+    
     def __str__(self):
         return f"Book position: {self.title}"
     
@@ -27,7 +32,7 @@ class BookTitle(models.Model):
     
 
 class Book(models.Model):
-    title = models.ForeignKey(BookTitle, on_delete=models.CASCADE)
+    title = models.ForeignKey(BookTitle, on_delete=models.CASCADE, related_name="books")
     isbn = models.CharField(max_length=24, blank=True)
     qr_code = models.ImageField(upload_to='qr_codes', blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
