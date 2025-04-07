@@ -9,6 +9,4 @@ from .views import home_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_view),
-]
-
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
